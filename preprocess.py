@@ -1,13 +1,9 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report
 import nltk
 import re
 import os
 
-# # Download necessary NLTK data
+# # Download necessary NLTK data (only run once)
 # nltk.download('punkt')
 # nltk.download('stopwords')
 # nltk.download('wordnet')
@@ -24,7 +20,7 @@ df = pd.read_csv('2024-Resume-NLP/dataset/Resume/resume.csv')
 # Print the shape of the original dataset
 print("Original dataset shape:", df.shape)
 
-# # Sample small part of the dataset
+# # Sample small part of the dataset (only for testing)
 # df = df.sample(frac=0.01, random_state=42)
 
 # Drop the original Resume_html column
@@ -45,10 +41,16 @@ def preprocess_text(text):
 # Apply preprocessing
 df['Resume_str'] = df['Resume_str'].apply(preprocess_text)
 
+# Squeeky-Clean:
+# Check for NaN values in the 'Resume_str' column
+print("Number of NaN values in 'Resume_str':", df['Resume_str'].isna().sum())
+# Drop rows with NaN values in 'Resume_str'
+df = df.dropna(subset=['Resume_str'])
+
 # Print a clean example
 example_index = 1
 print("Aplicant example:\n", df.iloc[example_index])
-print("Resume text:\n", df.iloc[example_index]['Resume_str'])
+print("Resume text example:\n", df.iloc[example_index]['Resume_str'])
 
 # Save the cleaned data to a new CSV file
 cleaned_csv_path = '2024-Resume-NLP/dataset/Resume/cleaned-Resume.csv'
